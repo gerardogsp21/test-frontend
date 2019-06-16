@@ -1,0 +1,14 @@
+.listado {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 1px;
+}
+
+.agregar-marca {
+    text-align: end;
+    margin-bottom: 10px;
+}
+
+.sep {
+    margin-right: 2px;
+}

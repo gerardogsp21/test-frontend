@@ -1,0 +1,57 @@
+
+<div class="listado">
+
+  <div class="agregar-producto">
+    <a class="btn btn-outline-dark btn-sm" routerLink="/producto/crear">
+      <i class="mdi mdi-plus"></i> Agregar producto
+    </a>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <th>Nombre</th>
+        <th>Talla</th>
+        <th>Obervaciones</th>
+        <th>Marca</th>
+        <th>Cantidad en inventario</th>
+        <th>Fecha inventario</th>
+        <th>Acciones</th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of productos.data; let i = index">
+          <td>{{item?.nombre}}</td>
+          <td>{{item?.talla}}</td>
+          <td>{{item?.observaciones}}</td>
+          <td>{{item?.marca.nombre}}</td>
+          <td>{{item?.cantidad_inventario}}</td>
+          <td>{{item?.fecha_embarque}}</td>
+          <td>
+            <!-- <a class="btn btn-outline-dark" placement="top" ngbTooltip="Eliminar"><i class="mdi mdi-delete-forever"></i></a> -->
+            <a class="btn btn-outline-dark btn-sm sep" routerLink="/producto/detalle/{{item?.id}}">Ver</a>
+            <a class="btn btn-outline-dark btn-sm sep" routerLink="/producto/editar/{{item?.id}}">Editar</a>
+            <div class="btn-group" ngbDropdown role="group" aria-label="Eliminar">
+                <button class="btn btn-outline-danger btn-sm" ngbDropdownToggle>Eliminar</button>
+                <div class="dropdown-menu" ngbDropdownMenu>
+                  <button class="dropdown-item" (click)="eliminarProducto(item?.id, i)">Click para confirmar</button>
+                </div>
+              </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <div class="text-center">
+      <button class="btn btn-xs btn-primary" (click)="changePage(productos?.prev_page_url)" 
+              *ngIf="productos?.prev_page_url">
+        <span class="fa fa-angle-left"></span>
+      </button>
+            Página {{productos?.current_page}} / {{productos?.last_page}}
+      <button class="btn btn-xs btn-primary" (click)="changePage(productos?.next_page_url)" 
+              *ngIf="productos?.next_page_url">
+        <span class="fa fa-angle-right"></span>
+      </button>
+  </div>
+</div>
+

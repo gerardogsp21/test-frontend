@@ -1,0 +1,43 @@
+<div class="producto">
+  <div class="row">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8">
+      <div class="row">
+        <div class="col-sm-4"><b>Nombre</b>:</div>
+        <div class="col-sm-8">{{producto?.nombre}}</div>
+      </div>
+      <div class="row">
+          <div class="col-sm-4"><b>Talla</b>:</div>
+          <div class="col-sm-8">{{producto?.talla}}</div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4"><b>Observaciones</b>:</div>
+        <div class="col-sm-8">{{producto?.observaciones}}</div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4"><b>Marca</b>:</div>
+        <div class="col-sm-8">
+          <a  routerLink="/marca/detalle/{{producto.marca?.id}}">{{producto.marca?.nombre}}</a>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4"><b>Cantidad en inventario</b>:</div>
+        <div class="col-sm-8">{{producto?.cantidad_inventario}}</div>
+      </div>
+      <div class="row">
+        <div class="col-sm-4"><b>Fecha de embarque</b>:</div>
+        <div class="col-sm-8">{{producto?.fecha_embarque}}</div>
+      </div>
+      
+      <br>
+  
+      <div class="row">
+          <div class="col-sm-6">
+            <a class="btn btn-outline-dark btn-sm" routerLink="/producto/listado">
+              <i class="mdi mdi-arrow-left-bold"></i> Regresar
+            </a>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>

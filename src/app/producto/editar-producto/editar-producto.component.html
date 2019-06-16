@@ -1,0 +1,110 @@
+<div class="producto">
+  <div *ngIf="errores?.length > 0">
+      <ngb-alert *ngFor="let error of errores" type="danger" (close)="closeAlert(error)">{{ error }}</ngb-alert>
+  </div>
+
+  <div *ngIf="respuesta.status">
+      <ngb-alert type="success" [dismissible]="false">{{respuesta.msg}}</ngb-alert>
+  </div>
+  
+  <div class="row">
+    <div class="col-sm-12">
+      <form name="form" (ngSubmit)="f.form.valid && actualizarProducto()" #f="ngForm" novalidate>
+        <div class="row">
+            <div class="col-sm-4">
+              <div class="form-group">
+                  <label for="nombre">Nombre<span class="requerido">*</span></label>
+                  <input type="text" class="form-control" name="nombre" 
+                        [(ngModel)]="producto.nombre" #nombre="ngModel" pattern="[A-Za-z ]+" maxlength="100"
+                        [ngClass]="{ 'is-invalid': f.submitted && nombre.invalid }" required />
+                  <div *ngIf="f.submitted && nombre.invalid" class="invalid-feedback">
+                      <div *ngIf="nombre.errors.required">El nombre es requerido</div>
+                      <div *ngIf="nombre.errors.pattern">El nombre contiene formato incorrecto</div>
+                      <div *ngIf="nombre.errors.maxlength">El nombre no puede sobrepasar los 100 caracteres</div>
+                  </div>
+              </div>
+            </div>
+
+            <div class="col-sm-4">
+                <div class="form-group">
+                  <label for="talla">Talla<span class="requerido">*</span></label>
+                  <select class="form-control" name="talla" [(ngModel)]="producto.talla">
+                    <option value="S">S</option>
+                    <option value="M">M</option>
+                    <option value="L">L</option>
+                  </select>
+                </div>  
+            </div>
+
+            <div class="col-sm-4">
+                <div class="form-group">
+                  <label for="talla">Marcas<span class="requerido">*</span></label>
+                  <select class="form-control" name="marca_id" [(ngModel)]="producto.marca_id">
+                    <option [value]="item?.id" *ngFor="let item of marcas">{{item.nombre}} - {{item.referencia}}</option>
+                  </select>
+                </div>  
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                  <div class="form-group">
+                      <label for="fecha_embarque">Fecha de embarque<span class="requerido">*</span></label>
+                      <input type="date" class="form-control" name="fecha_embarque" 
+                            [(ngModel)]="producto.fecha_embarque" #fecha_embarque="ngModel"
+                            [ngClass]="{ 'is-invalid': f.submitted && fecha_embarque.invalid }" required />
+                      <div *ngIf="f.submitted && fecha_embarque.invalid" class="invalid-feedback">
+                          <div *ngIf="fecha_embarque.errors.required">La fecha de embarque es requerida</div>
+                      </div>
+                  </div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                  <label for="cantidad_inventario">Cantidad<span class="requerido">*</span></label>
+                  <input type="text" class="form-control" name="cantidad_inventario" 
+                        [(ngModel)]="producto.cantidad_inventario" #cantidad_inventario="ngModel" pattern="[0-9]+" maxlength="10"
+                        [ngClass]="{ 'is-invalid': f.submitted && cantidad_inventario.invalid }" required />
+                  <div *ngIf="f.submitted && cantidad_inventario.invalid" class="invalid-feedback">
+                      <div *ngIf="cantidad_inventario.errors.required">La cantidad es requerida</div>
+                      <div *ngIf="cantidad_inventario.errors.pattern">Debe ser un valor numerico entero</div>
+                      <div *ngIf="cantidad_inventario.errors.maxlength">El cantidad no puede sobrepasar los 10 digitos</div>
+                  </div>
+              </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group">
+                  <label for="observaciones">Observaciones<span class="requerido">*</span></label>
+                  <textarea type="text" class="form-control" name="observaciones" 
+                        [(ngModel)]="producto.observaciones" #observaciones="ngModel" maxlength="200"
+                        [ngClass]="{ 'is-invalid': f.submitted && observaciones.invalid }" required ></textarea>
+                  <div *ngIf="f.submitted && observaciones.invalid" class="invalid-feedback">
+                      <div *ngIf="observaciones.errors.required">El observaciones es requerido</div>
+                      <div *ngIf="observaciones.errors.maxlength">El observaciones no puede sobrepasar los 200 caracteres</div>
+                  </div>
+              </div>
+            </div>
+          </div>
+        <br>
+  
+        <div class="row">
+            
+            <div class="col-sm-6">
+              <a class="btn btn-outline-dark btn-sm" routerLink="/producto/listado">
+                <i class="mdi mdi-arrow-left-bold"></i> Regresar
+              </a>
+            </div>
+  
+            <div class="col-sm-6">
+              <button type="submit" class="btn btn-primary btn-sm">Actualizar</button>
+            </div>
+  
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

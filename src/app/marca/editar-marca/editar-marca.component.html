@@ -1,0 +1,59 @@
+<div class="marca">
+  <div *ngIf="errores?.length > 0">
+      <ngb-alert *ngFor="let error of errores" type="danger" (close)="closeAlert(error)">{{ error }}</ngb-alert>
+  </div>
+
+  <div *ngIf="respuesta.status">
+      <ngb-alert type="success" [dismissible]="false">{{respuesta.msg}}</ngb-alert>
+  </div>
+  
+  <div class="row">
+    <div class="col-sm-4"></div>
+    <div class="col-sm-4">
+      <form name="form" (ngSubmit)="f.form.valid && actualizarMarca()" #f="ngForm" novalidate>
+        <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group">
+                  <label for="nombre">Nombre<span class="requerido">*</span></label>
+                  <input type="text" class="form-control" name="nombre" 
+                        [(ngModel)]="marca.nombre" #nombre="ngModel" pattern="[A-Za-z ]+" maxlength="100"
+                        [ngClass]="{ 'is-invalid': f.submitted && nombre.invalid }" required />
+                  <div *ngIf="f.submitted && nombre.invalid" class="invalid-feedback">
+                      <div *ngIf="nombre.errors.required">El nombre es requerido</div>
+                      <div *ngIf="nombre.errors.pattern">El nombre contiene formato incorrecto</div>
+                      <div *ngIf="nombre.errors.maxlength">El nombre no puede sobrepasar los 100 caracteres</div>
+                  </div>
+              </div>
+            </div>
+  
+            <div class="col-sm-12">
+              <div class="form-group">
+                  <label for="referencia">Referencia<span class="requerido">*</span></label>
+                  <input type="text" class="form-control" name="referencia" [(ngModel)]="marca.referencia" maxlength="15"
+                        #referencia="ngModel" [ngClass]="{ 'is-invalid': f.submitted && referencia.invalid }" 
+                        required />
+                  <div *ngIf="f.submitted && referencia.invalid" class="invalid-feedback">
+                      <div *ngIf="referencia.errors.required">La referencia es requerida</div>
+                      <div *ngIf="referencia.errors.maxlength">La referencia no puede sobrepasar los 15 caracteres</div>
+                  </div>
+              </div>
+            </div>
+        </div><br>
+  
+        <div class="row">
+            
+            <div class="col-sm-6">
+              <a class="btn btn-outline-dark btn-sm" routerLink="/marca/listado">
+                <i class="mdi mdi-arrow-left-bold"></i> Regresar
+              </a>
+            </div>
+  
+            <div class="col-sm-6">
+              <button type="submit" class="btn btn-primary btn-sm">Actualizar</button>
+            </div>
+  
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
