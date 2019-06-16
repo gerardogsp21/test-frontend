@@ -1,16 +1,16 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class ProductoService {
 
-    base_url = 'http://localhost/test-backend/public/api/';
+    base_url = !environment.production ? environment.base_url_local : environment.base_url_public;
 
     headers = new HttpHeaders();
 
     constructor(private http: HttpClient) { };
-
     
     getProductoPaginado(): Observable<any>  {
         return this.http.get(this.base_url + 'productos/listar/paginado');

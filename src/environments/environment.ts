@@ -3,7 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  base_url_local: 'http://localhost/test-backend/public/api/',
+  base_url_public: 'https://pruebakuikwork.000webhostapp.com/test-backend/public/api/'
 };
 
 /*
