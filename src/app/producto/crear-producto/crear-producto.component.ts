@@ -57,7 +57,7 @@ export class CrearProductoComponent implements OnInit {
           this.respuesta = datos;
           setTimeout(function() {
             that.router.navigate(['/producto/listado']);
-          }, 2000);
+          }, 1000);
         }
       },
       error => console.log(<any>error)

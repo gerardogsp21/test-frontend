@@ -77,7 +77,7 @@ var CrearMarcaComponent = /** @class */ (function () {
                 _this.respuesta = datos;
                 setTimeout(function () {
                     that.router.navigate(['/marca/listado']);
-                }, 2000);
+                }, 1000);
             }
         }, function (error) { return console.log(error); });
     };
@@ -239,7 +239,7 @@ module.exports = ".listado {\r\n    padding: 20px;\r\n    background-color: #fff
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n<div class=\"listado\">\n\n  <div class=\"agregar-marca\">\n    <a class=\"btn btn-outline-dark btn-sm\" routerLink=\"/marca/crear\">\n      <i class=\"mdi mdi-plus\"></i> Agregar marca\n    </a>\n  </div>\n\n  <div class=\"table-responsive\">\n      <table class=\"table table-striped\">\n        <thead>\n          <th>Nombre</th>\n          <th>Referencia</th>\n          <th>Acciones</th>\n        </thead>\n        <tbody>\n          <tr *ngFor=\"let item of marcas.data; let i = index\">\n            <td>{{item?.nombre}}</td>\n            <td>{{item?.referencia}}</td>\n            <td>\n              <!-- <a class=\"btn btn-outline-dark\" placement=\"top\" ngbTooltip=\"Eliminar\"><i class=\"mdi mdi-delete-forever\"></i></a> -->\n              <a class=\"btn btn-outline-dark btn-sm sep\" routerLink=\"/marca/detalle/{{item?.id}}\">Ver</a>\n              <a class=\"btn btn-outline-dark btn-sm sep\" routerLink=\"/marca/editar/{{item?.id}}\">Editar</a>\n              <div class=\"btn-group\" ngbDropdown role=\"group\" aria-label=\"Eliminar\">\n                  <button class=\"btn btn-outline-danger btn-sm\" ngbDropdownToggle>Eliminar</button>\n                  <div class=\"dropdown-menu\" ngbDropdownMenu>\n                    <button class=\"dropdown-item\" (click)=\"eliminarMarca(item?.id, i)\">Click para confirmar</button>\n                  </div>\n                </div>\n            </td>\n          </tr>\n        </tbody>\n      </table>\n  </div>\n  \n  <div class=\"text-center\">\n      <button class=\"btn btn-xs btn-primary\" (click)=\"changePage(marcas.prev_page_url)\" \n              *ngIf=\"marcas.prev_page_url\">\n        <span class=\"fa fa-angle-left\"></span>\n      </button>\n            Página {{marcas.current_page}} / {{marcas.last_page}}\n      <button class=\"btn btn-xs btn-primary\" (click)=\"changePage(marcas.next_page_url)\" \n              *ngIf=\"marcas.next_page_url\">\n        <span class=\"fa fa-angle-right\"></span>\n      </button>\n  </div>\n\n</div>\n\n"
+module.exports = "\n<div class=\"listado\">\n  <div *ngIf=\"respuesta?.type\">\n      <ngb-alert [type]=\"respuesta.type\" [dismissible]=\"false\">{{ respuesta?.msg }}</ngb-alert>\n  </div>\n  \n  <div class=\"agregar-marca\">\n    <a class=\"btn btn-outline-dark btn-sm\" routerLink=\"/marca/crear\">\n      <i class=\"mdi mdi-plus\"></i> Agregar marca\n    </a>\n  </div>\n\n  <div class=\"table-responsive\">\n      <table class=\"table table-striped\">\n        <thead>\n          <th>Nombre</th>\n          <th>Referencia</th>\n          <th>Acciones</th>\n        </thead>\n        <tbody>\n          <tr *ngFor=\"let item of marcas.data; let i = index\">\n            <td>{{item?.nombre}}</td>\n            <td>{{item?.referencia}}</td>\n            <td>\n              <!-- <a class=\"btn btn-outline-dark\" placement=\"top\" ngbTooltip=\"Eliminar\"><i class=\"mdi mdi-delete-forever\"></i></a> -->\n              <a class=\"btn btn-outline-dark btn-sm sep\" routerLink=\"/marca/detalle/{{item?.id}}\">Ver</a>\n              <a class=\"btn btn-outline-dark btn-sm sep\" routerLink=\"/marca/editar/{{item?.id}}\">Editar</a>\n              <div class=\"btn-group\" ngbDropdown role=\"group\" aria-label=\"Eliminar\">\n                  <button class=\"btn btn-outline-danger btn-sm\" ngbDropdownToggle>Eliminar</button>\n                  <div class=\"dropdown-menu\" ngbDropdownMenu>\n                    <button class=\"dropdown-item\" (click)=\"eliminarMarca(item?.id, i)\">Click para confirmar</button>\n                  </div>\n                </div>\n            </td>\n          </tr>\n        </tbody>\n      </table>\n  </div>\n  \n  <div class=\"text-center\">\n      <button class=\"btn btn-xs btn-primary\" (click)=\"changePage(marcas.prev_page_url)\" \n              *ngIf=\"marcas.prev_page_url\">\n        <span class=\"fa fa-angle-left\"></span>\n      </button>\n            Página {{marcas.current_page}} / {{marcas.last_page}}\n      <button class=\"btn btn-xs btn-primary\" (click)=\"changePage(marcas.next_page_url)\" \n              *ngIf=\"marcas.next_page_url\">\n        <span class=\"fa fa-angle-right\"></span>\n      </button>\n  </div>\n\n</div>\n\n"
 
 /***/ }),
 
@@ -272,6 +272,7 @@ var ListarMarcasComponent = /** @class */ (function () {
         this.marcas = {
             data: []
         };
+        this.respuesta = { type: null, msg: '' };
     }
     ListarMarcasComponent.prototype.ngOnInit = function () {
         this.cargarMarcas();
@@ -284,10 +285,17 @@ var ListarMarcasComponent = /** @class */ (function () {
     };
     ListarMarcasComponent.prototype.eliminarMarca = function (marca_id, index) {
         var _this = this;
+        var that = this;
         this.marcaService.deleteMarca(marca_id).subscribe(function (datos) {
+            _this.respuesta = datos;
+            _this.respuesta.type = 'danger';
             if (datos.status) {
+                _this.respuesta.type = 'success';
                 _this.marcas.data.splice(index, 1);
             }
+            setTimeout(function () {
+                that.respuesta = { type: null, msg: '' };
+            }, 1000);
         }, function (error) { return console.log(error); });
     };
     ListarMarcasComponent.prototype.changePage = function (url) {
@@ -462,6 +470,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MarcaService", function() { return MarcaService; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../environments/environment */ "./src/environments/environment.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -473,10 +482,11 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 };
 
 
+
 var MarcaService = /** @class */ (function () {
     function MarcaService(http) {
         this.http = http;
-        this.base_url = 'http://localhost/test-backend/public/api/';
+        this.base_url = !_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].production ? _environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].base_url_local : _environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].base_url_public;
         this.headers = new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]();
     }
     ;

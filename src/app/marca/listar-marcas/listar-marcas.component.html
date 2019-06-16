@@ -1,6 +1,9 @@
 
 <div class="listado">
-
+  <div *ngIf="respuesta?.type">
+      <ngb-alert [type]="respuesta.type" [dismissible]="false">{{ respuesta?.msg }}</ngb-alert>
+  </div>
+  
   <div class="agregar-marca">
     <a class="btn btn-outline-dark btn-sm" routerLink="/marca/crear">
       <i class="mdi mdi-plus"></i> Agregar marca

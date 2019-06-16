@@ -10,7 +10,10 @@ import { ProductoService } from '../producto.service';
   providers: [ProductoService]
 })
 export class ListarProductosComponent implements OnInit {
+  
   public productos = { data: [] };
+  public respuesta: any = {type: null, msg: ''};
+
   constructor(private productoService: ProductoService) { }
 
   ngOnInit() {
@@ -27,11 +30,18 @@ export class ListarProductosComponent implements OnInit {
   }
   
   eliminarProducto(producto_id, index) {
+    const that = this;
     this.productoService.deleteProducto(producto_id).subscribe(
       (datos: any) => {
+        this.respuesta = datos;
+        this.respuesta.type = 'danger';
         if (datos.status) {
+          this.respuesta.type = 'success';
           this.productos.data.splice(index, 1);
         }
+        setTimeout(function(){
+          that.respuesta = {type: null, msg: ''};
+        }, 1000);
       },
       error => console.log(<any>error)
     );

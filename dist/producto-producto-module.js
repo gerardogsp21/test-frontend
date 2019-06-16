@@ -92,7 +92,7 @@ var CrearProductoComponent = /** @class */ (function () {
                 _this.respuesta = datos;
                 setTimeout(function () {
                     that.router.navigate(['/producto/listado']);
-                }, 2000);
+                }, 1000);
             }
         }, function (error) { return console.log(error); });
     };
@@ -262,7 +262,7 @@ module.exports = ".listado {\r\n    padding: 20px;\r\n    background-color: #fff
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n<div class=\"listado\">\n\n  <div class=\"agregar-producto\">\n    <a class=\"btn btn-outline-dark btn-sm\" routerLink=\"/producto/crear\">\n      <i class=\"mdi mdi-plus\"></i> Agregar producto\n    </a>\n  </div>\n\n  <div class=\"table-responsive\">\n    <table class=\"table\">\n      <thead>\n        <th>Nombre</th>\n        <th>Talla</th>\n        <th>Obervaciones</th>\n        <th>Marca</th>\n        <th>Cantidad en inventario</th>\n        <th>Fecha inventario</th>\n        <th>Acciones</th>\n      </thead>\n      <tbody>\n        <tr *ngFor=\"let item of productos.data; let i = index\">\n          <td>{{item?.nombre}}</td>\n          <td>{{item?.talla}}</td>\n          <td>{{item?.observaciones}}</td>\n          <td>{{item?.marca.nombre}}</td>\n          <td>{{item?.cantidad_inventario}}</td>\n          <td>{{item?.fecha_embarque}}</td>\n          <td>\n            <!-- <a class=\"btn btn-outline-dark\" placement=\"top\" ngbTooltip=\"Eliminar\"><i class=\"mdi mdi-delete-forever\"></i></a> -->\n            <a class=\"btn btn-outline-dark btn-sm sep\" routerLink=\"/producto/detalle/{{item?.id}}\">Ver</a>\n            <a class=\"btn btn-outline-dark btn-sm sep\" routerLink=\"/producto/editar/{{item?.id}}\">Editar</a>\n            <div class=\"btn-group\" ngbDropdown role=\"group\" aria-label=\"Eliminar\">\n                <button class=\"btn btn-outline-danger btn-sm\" ngbDropdownToggle>Eliminar</button>\n                <div class=\"dropdown-menu\" ngbDropdownMenu>\n                  <button class=\"dropdown-item\" (click)=\"eliminarProducto(item?.id, i)\">Click para confirmar</button>\n                </div>\n              </div>\n          </td>\n        </tr>\n      </tbody>\n    </table>\n  </div>\n  \n  <div class=\"text-center\">\n      <button class=\"btn btn-xs btn-primary\" (click)=\"changePage(productos?.prev_page_url)\" \n              *ngIf=\"productos?.prev_page_url\">\n        <span class=\"fa fa-angle-left\"></span>\n      </button>\n            Página {{productos?.current_page}} / {{productos?.last_page}}\n      <button class=\"btn btn-xs btn-primary\" (click)=\"changePage(productos?.next_page_url)\" \n              *ngIf=\"productos?.next_page_url\">\n        <span class=\"fa fa-angle-right\"></span>\n      </button>\n  </div>\n</div>\n\n"
+module.exports = "\n<div class=\"listado\">\n  <div *ngIf=\"respuesta?.type\">\n      <ngb-alert [type]=\"respuesta.type\" [dismissible]=\"false\">{{ respuesta?.msg }}</ngb-alert>\n  </div>\n\n  <div class=\"agregar-producto\">\n    <a class=\"btn btn-outline-dark btn-sm\" routerLink=\"/producto/crear\">\n      <i class=\"mdi mdi-plus\"></i> Agregar producto\n    </a>\n  </div>\n\n  <div class=\"table-responsive\">\n    <table class=\"table\">\n      <thead>\n        <th>Nombre</th>\n        <th>Talla</th>\n        <th>Obervaciones</th>\n        <th>Marca</th>\n        <th>Cantidad en inventario</th>\n        <th>Fecha inventario</th>\n        <th>Acciones</th>\n      </thead>\n      <tbody>\n        <tr *ngFor=\"let item of productos.data; let i = index\">\n          <td>{{item?.nombre}}</td>\n          <td>{{item?.talla}}</td>\n          <td>{{item?.observaciones}}</td>\n          <td>{{item?.marca.nombre}}</td>\n          <td>{{item?.cantidad_inventario}}</td>\n          <td>{{item?.fecha_embarque}}</td>\n          <td>\n            <!-- <a class=\"btn btn-outline-dark\" placement=\"top\" ngbTooltip=\"Eliminar\"><i class=\"mdi mdi-delete-forever\"></i></a> -->\n            <a class=\"btn btn-outline-dark btn-sm sep\" routerLink=\"/producto/detalle/{{item?.id}}\">Ver</a>\n            <a class=\"btn btn-outline-dark btn-sm sep\" routerLink=\"/producto/editar/{{item?.id}}\">Editar</a>\n            <div class=\"btn-group\" ngbDropdown role=\"group\" aria-label=\"Eliminar\">\n                <button class=\"btn btn-outline-danger btn-sm\" ngbDropdownToggle>Eliminar</button>\n                <div class=\"dropdown-menu\" ngbDropdownMenu>\n                  <button class=\"dropdown-item\" (click)=\"eliminarProducto(item?.id, i)\">Click para confirmar</button>\n                </div>\n              </div>\n          </td>\n        </tr>\n      </tbody>\n    </table>\n  </div>\n  \n  <div class=\"text-center\">\n      <button class=\"btn btn-xs btn-primary\" (click)=\"changePage(productos?.prev_page_url)\" \n              *ngIf=\"productos?.prev_page_url\">\n        <span class=\"fa fa-angle-left\"></span>\n      </button>\n            Página {{productos?.current_page}} / {{productos?.last_page}}\n      <button class=\"btn btn-xs btn-primary\" (click)=\"changePage(productos?.next_page_url)\" \n              *ngIf=\"productos?.next_page_url\">\n        <span class=\"fa fa-angle-right\"></span>\n      </button>\n  </div>\n</div>\n\n"
 
 /***/ }),
 
@@ -293,6 +293,7 @@ var ListarProductosComponent = /** @class */ (function () {
     function ListarProductosComponent(productoService) {
         this.productoService = productoService;
         this.productos = { data: [] };
+        this.respuesta = { type: null, msg: '' };
     }
     ListarProductosComponent.prototype.ngOnInit = function () {
         this.cargarProductos();
@@ -305,10 +306,17 @@ var ListarProductosComponent = /** @class */ (function () {
     };
     ListarProductosComponent.prototype.eliminarProducto = function (producto_id, index) {
         var _this = this;
+        var that = this;
         this.productoService.deleteProducto(producto_id).subscribe(function (datos) {
+            _this.respuesta = datos;
+            _this.respuesta.type = 'danger';
             if (datos.status) {
+                _this.respuesta.type = 'success';
                 _this.productos.data.splice(index, 1);
             }
+            setTimeout(function () {
+                that.respuesta = { type: null, msg: '' };
+            }, 1000);
         }, function (error) { return console.log(error); });
     };
     ListarProductosComponent.prototype.changePage = function (url) {
@@ -483,6 +491,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ProductoService", function() { return ProductoService; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../environments/environment */ "./src/environments/environment.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -494,10 +503,11 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 };
 
 
+
 var ProductoService = /** @class */ (function () {
     function ProductoService(http) {
         this.http = http;
-        this.base_url = 'http://localhost/test-backend/public/api/';
+        this.base_url = !_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].production ? _environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].base_url_local : _environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].base_url_public;
         this.headers = new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]();
     }
     ;

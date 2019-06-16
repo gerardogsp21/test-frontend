@@ -21,7 +21,6 @@ export class CrearMarcaComponent implements OnInit {
 
   constructor(private marcaService: MarcaService, private router: Router) { }
 
-
   ngOnInit() {
   }
 
@@ -40,7 +39,7 @@ export class CrearMarcaComponent implements OnInit {
           this.respuesta = datos;
           setTimeout(function() {
             that.router.navigate(['/marca/listado']);
-          }, 2000);
+          }, 1000);
         }
       },
       error => console.log(<any>error)

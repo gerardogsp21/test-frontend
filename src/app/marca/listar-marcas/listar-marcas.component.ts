@@ -13,6 +13,8 @@ export class ListarMarcasComponent implements OnInit {
   public marcas = {
     data: []
   };
+  public respuesta: any = {type: null, msg: ''};
+
   constructor(private marcaService: MarcaService) { }
 
   ngOnInit() {
@@ -29,11 +31,18 @@ export class ListarMarcasComponent implements OnInit {
   }
   
   eliminarMarca(marca_id, index) {
+    const that = this;
     this.marcaService.deleteMarca(marca_id).subscribe(
       (datos: any) => {
+        this.respuesta = datos;
+        this.respuesta.type = 'danger';
         if (datos.status) {
+          this.respuesta.type = 'success';
           this.marcas.data.splice(index, 1);
         }
+        setTimeout(function(){
+          that.respuesta = {type: null, msg: ''};
+        }, 1000);
       },
       error => console.log(<any>error)
     );

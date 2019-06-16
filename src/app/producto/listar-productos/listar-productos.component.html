@@ -1,5 +1,8 @@
 
 <div class="listado">
+  <div *ngIf="respuesta?.type">
+      <ngb-alert [type]="respuesta.type" [dismissible]="false">{{ respuesta?.msg }}</ngb-alert>
+  </div>
 
   <div class="agregar-producto">
     <a class="btn btn-outline-dark btn-sm" routerLink="/producto/crear">
